@@ -1,6 +1,6 @@
-create table inventory_table(
-id varchar(255) NOT NULL,
-skucode varchar(255),
-qauntity Bigint(11),
+create table t_inventory(
+id bigint(20) not null AUTO_INCREMENT,
+skucode varchar(255) default null,
+quantity int(11) default null,
 primary key(id)
 )

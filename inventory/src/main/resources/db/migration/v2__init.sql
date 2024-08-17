@@ -1,1 +1,0 @@
-insert into inventory_table(quantity, skucode) values(100, "iphone_15"),(100, "samsung"),(100, "vivo"),(100, "oppo");
