@@ -1,15 +1,32 @@
 package com.dockermicroservices.orderservice.client;
 
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.GetExchange;
 
-//@FeignClient(value="inventory", url = "${inventory.url}")
+import org.slf4j.Logger;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 
+//@FeignClient(value="inventory", url = "${inventory.url}")
 public interface inventoryclients {
+	
+	
+
+
+    Logger log = LoggerFactory.getLogger(inventoryclients.class);
+	
 	
 //	@GetMapping("/api/inventory")
 	@GetExchange("/api/inventory")
-	Boolean isinstock(@RequestParam String skucode, @RequestParam Integer quantity);
+    @CircuitBreaker(name = "inventory",fallbackMethod = "fallbackMethod")
+    @Retry(name = "inventory")
+	Boolean isInStock(@RequestParam String skucode, @RequestParam Integer quantity);
+	
+	
+	default boolean fallbackMethod(String code,Integer quantity,Throwable throwable){
+        log.info("Cannot get inventory for skucode {},failure reason: {}",code,throwable.getMessage());
+        return false;
+    }
+	
 }
