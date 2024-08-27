@@ -4,12 +4,15 @@ import org.springframework.cloud.gateway.server.mvc.handler.GatewayRouterFunctio
 import org.springframework.cloud.gateway.server.mvc.handler.HandlerFunctions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.function.HandlerFilterFunction;
-import org.springframework.web.servlet.function.HandlerFunction;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.function.RequestPredicates;
 import org.springframework.web.servlet.function.RouterFunction;
-import org.springframework.web.servlet.function.RouterFunctions;
 import static org.springframework.cloud.gateway.server.mvc.filter.FilterFunctions.setPath;
+import static org.springframework.cloud.gateway.server.mvc.handler.GatewayRouterFunctions.route;
+
+import java.net.URI;
+
+import org.springframework.cloud.gateway.server.mvc.filter.CircuitBreakerFilterFunctions;
 import org.springframework.web.servlet.function.ServerResponse;
 
 @Configuration
@@ -19,7 +22,9 @@ public class Routes {
 	public RouterFunction<ServerResponse> productServiceRoutes() {
 
 		return GatewayRouterFunctions.route("productservice")
-				.route(RequestPredicates.path("/api/product"), HandlerFunctions.http("http://localhost:8080")).build();
+				.route(RequestPredicates.path("/api/product"), HandlerFunctions.http("http://localhost:8080"))
+				.filter(CircuitBreakerFilterFunctions.circuitBreaker("productServiceCircuitBreaker", URI.create("forward:/fallbackRoute")))
+				.build();
 	}
 
 	@Bean
@@ -44,7 +49,9 @@ public class Routes {
 	public RouterFunction<ServerResponse> orderServiceRoutes() {
 
 		return GatewayRouterFunctions.route("orderservice")
-				.route(RequestPredicates.path("/api/order"), HandlerFunctions.http("http://localhost:8081")).build();
+				.route(RequestPredicates.path("/api/order"), HandlerFunctions.http("http://localhost:8081"))
+				.filter(CircuitBreakerFilterFunctions.circuitBreaker("orderServiceCircuitBreaker", URI.create("forward:/fallbackRoute")))
+				.build();
 	}
 
 	@Bean
@@ -52,6 +59,7 @@ public class Routes {
 
 		return GatewayRouterFunctions.route("inventory")
 				.route(RequestPredicates.path("/api/inventory"), HandlerFunctions.http("http://localhost:8082"))
+				.filter(CircuitBreakerFilterFunctions.circuitBreaker("inventoryServiceCircuitBreaker", URI.create("forward:/fallbackRoute")))
 				.build();
 	}
 	
@@ -64,4 +72,12 @@ public class Routes {
 				.filter(setPath("/api-docs")).build();
 	}
 
+//resilince4j fallback routes
+	public RouterFunction<ServerResponse> fallbackRoute() {
+		return route("fallbackRoute")
+				.GET("/fallbackRoute", request -> ServerResponse.status(HttpStatus.SERVICE_UNAVAILABLE)
+						.body("service unavailable please try again later"))
+				.build();
+		
+	}
 }
