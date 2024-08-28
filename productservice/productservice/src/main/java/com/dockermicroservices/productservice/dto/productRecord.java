@@ -11,4 +11,4 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-public record productRecord(String id, String name, String description, BigDecimal price) {}
+public record productRecord(String id, String name, String description, BigDecimal price,String skucode) {}

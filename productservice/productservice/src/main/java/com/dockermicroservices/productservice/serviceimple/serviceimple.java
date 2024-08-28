@@ -27,6 +27,7 @@ public class serviceimple implements productService{
 	@Override
 	public product createproduct(productRecord productrecord) {
 		product product1 = product.builder()
+							.skucode(productrecord.skucode())
 							.name(productrecord.name())
 							.description(productrecord.description())
 							.price(productrecord.price())
