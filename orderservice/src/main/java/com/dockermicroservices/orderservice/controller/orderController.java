@@ -1,6 +1,7 @@
 package com.dockermicroservices.orderservice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,7 @@ public orderController(orderService service) {
 
 @PostMapping
 public order placeOrder(@RequestBody order o1) {
+
 	order placedOrder = service.placeOrder(o1);
 	return placedOrder;
 }
