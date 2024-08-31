@@ -1,0 +1,12 @@
+
+{
+"type" : "record",
+"name" : "orderPlacedEvent",
+"namespace": "com.dockermicroservices.orderservice.event",
+"fields": [
+		{ "name": "orderNumber", "type": "String"},
+		{ "name": "email", "type": "String"},
+		{ "name": "firstname", "type": "String"},
+		{ "name": "lastname", "type": "String"}
+]
+}

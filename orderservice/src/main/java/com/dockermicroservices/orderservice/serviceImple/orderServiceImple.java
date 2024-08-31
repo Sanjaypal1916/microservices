@@ -42,7 +42,7 @@ public class orderServiceImple implements orderService {
 			repo.save(object);
 
 //		send message through kafka 
-			orderPlacedEvent orderplacedevent = new orderPlacedEvent(object.getOrdernumber(), object.getUserdetail().email());
+			orderPlacedEvent orderplacedevent = new orderPlacedEvent(object.getOrdernumber(), object.getUserdetail().email(), object.getUserdetail().firstname(), object.getUserdetail().lastname());
 			log.info("start - sending orderplaced event");
 			kafka.send("message: order-placed", orderplacedevent);
 			log.info("sent the msgg to the customer");

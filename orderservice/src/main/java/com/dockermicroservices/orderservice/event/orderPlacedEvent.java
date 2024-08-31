@@ -8,6 +8,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class orderPlacedEvent {
+
 	private String ordernumber;
-	private String useremail;
+	private String email;
+	private String firstname;
+	private String lastname;
+	
 }
