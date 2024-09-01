@@ -72,6 +72,14 @@
 		</dependency>
 
 
+<!-- grafana prometheus, metrics and loki-->
+
+<dependency>
+			<groupId>com.github.loki4j</groupId>
+			<artifactId>loki-logback-appender</artifactId>
+			<version>1.3.2</version>
+		</dependency>
+
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
